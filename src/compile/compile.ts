@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {AutoSizeType, LoggerInterface, Spec as VgSpec} from 'vega';
 import {isString, mergeConfig} from 'vega-util';
 import {getPositionScaleChannel} from '../channel';
@@ -70,6 +71,7 @@ export interface CompileOptions {
  * @returns         An object containing the compiled Vega spec and normalized Vega-Lite spec.
  */
 export function compile(inputSpec: TopLevelSpec, opt: CompileOptions = {}) {
+  debugger;
   // 0. Augment opt with default opts
   if (opt.logger) {
     // set the singleton logger to the provided logger
@@ -199,6 +201,7 @@ function assembleTopLevelModel(
   datasets: Datasets = {},
   usermeta: Dict<any>
 ): VgSpec {
+  debugger;
   // Config with Vega-Lite only config removed.
   const vgConfig = model.config ? stripAndRedirectConfig(model.config) : undefined;
 

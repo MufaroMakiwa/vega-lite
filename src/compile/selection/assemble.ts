@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {Signal, SignalRef} from 'vega';
 import {parseSelector} from 'vega-event-selector';
 import {identity, isArray, stringValue} from 'vega-util';
@@ -113,6 +114,7 @@ export function assembleTopLevelSignals(model: UnitModel, signals: Signal[]) {
 }
 
 export function assembleUnitSelectionData(model: UnitModel, data: readonly VgData[]): VgData[] {
+  debugger;
   const dataCopy = [...data];
   const unit = unitName(model, {escape: false});
 

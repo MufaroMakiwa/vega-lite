@@ -23,6 +23,7 @@ export const X = 'x' as const;
 export const Y = 'y' as const;
 export const X2 = 'x2' as const;
 export const Y2 = 'y2' as const;
+export const TIME = 'time' as const;
 
 // Position Offset
 export const XOFFSET = 'xOffset' as const;
@@ -76,7 +77,8 @@ const POSITION_CHANNEL_INDEX = {
   x: 1,
   y: 1,
   x2: 1,
-  y2: 1
+  y2: 1,
+  time: 1
 } as const;
 
 export type PositionChannel = keyof typeof POSITION_CHANNEL_INDEX;
@@ -544,6 +546,7 @@ function getSupportedMark(channel: ExtendedChannel): SupportedMark {
     case FACET:
     case ROW: // falls through
     case COLUMN:
+    case TIME:
       return ALL_MARKS;
     case X:
     case Y:
@@ -631,6 +634,7 @@ export function rangeType(channel: ExtendedChannel): RangeType {
     case Y2:
     case THETA2:
     case RADIUS2:
+    case TIME:
       return undefined;
 
     case FACET:

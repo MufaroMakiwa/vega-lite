@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {AggregateOp} from 'vega';
 import {array, isArray} from 'vega-util';
 import {isArgmaxDef, isArgminDef} from './aggregate';
@@ -46,7 +47,8 @@ import {
   XOFFSET,
   Y,
   Y2,
-  YOFFSET
+  YOFFSET,
+  TIME
 } from './channel';
 import {
   binRequiresRange,
@@ -101,13 +103,17 @@ export interface Encoding<F extends Field> {
    * The `value` of this channel can be a number or a string `"width"` for the width of the plot.
    */
   x?: PositionDef<F>;
-
   /**
    * Y coordinates of the marks, or height of vertical `"bar"` and `"area"` without specified `y2` or `height`.
    *
    * The `value` of this channel can be a number or a string `"height"` for the height of the plot.
    */
   y?: PositionDef<F>;
+
+  /**
+   * Time encoding channel
+   */
+  time?: PositionDef<F>;
 
   /**
    * Offset of x-position of the marks
@@ -525,6 +531,7 @@ export function initEncoding(
   filled: boolean,
   config: Config
 ): Encoding<string> {
+  debugger;
   const normalizedEncoding: Encoding<string> = {};
   for (const key of keys(encoding)) {
     if (!isChannel(key)) {
@@ -720,6 +727,7 @@ export function pathGroupingFields(mark: Mark, encoding: Encoding<string>): stri
       case THETA2:
       case RADIUS:
       case RADIUS2:
+      case TIME:
       // falls through
 
       case LATITUDE:

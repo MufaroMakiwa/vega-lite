@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {SignalRef} from 'vega';
 import {Config} from '../config';
 import * as log from '../log';
@@ -15,6 +16,7 @@ export function buildModel(
   unitSize: LayoutSizeMixins,
   config: Config<SignalRef>
 ): Model {
+  debugger;
   if (isFacetSpec(spec)) {
     return new FacetModel(spec, parent, parentGivenName, config);
   } else if (isLayerSpec(spec)) {
