@@ -1,3 +1,5 @@
+import {UnitModel} from '../unit';
+/* eslint-disable no-debugger */
 import {InlineDataset, isUrlData} from '../../data';
 import {Dict} from '../../util';
 import {VgData} from '../../vega.schema';
@@ -30,6 +32,8 @@ import {SourceNode} from './source';
 import {StackNode} from './stack';
 import {TimeUnitNode} from './timeunit';
 import {WindowTransformNode} from './window';
+import {IdentifierTransform, FilterTransform} from 'vega';
+import {TIME} from '../../channel';
 
 function makeWalkTree(data: VgData[]) {
   // to name datasources
@@ -215,6 +219,7 @@ export function assembleFacetData(root: FacetNode): VgData[] {
  * @return modified data array
  */
 export function assembleRootData(dataComponent: DataComponent, datasets: Dict<InlineDataset>): VgData[] {
+  debugger;
   const data: VgData[] = [];
 
   // dataComponent.sources.forEach(debug);
@@ -265,6 +270,62 @@ export function assembleRootData(dataComponent: DataComponent, datasets: Dict<In
       d.values = datasets[d.name];
     }
   }
-
+  debugger;
   return data;
+}
+
+export function assembleTimeEncodingData(model: UnitModel, data: readonly VgData[]): VgData[] {
+  const dataCopy = [...data];
+
+  if (!model.encoding.time) {
+    return dataCopy;
+  }
+  dataCopy.push({name: 'current_frame_0_store'});
+
+  // add identifier transform to current data sources
+  for (const d of data) {
+    addIdentifierTransform(d);
+  }
+
+  // extract data name
+  const dataSource = dataCopy[0].name;
+
+  // add source_0_curr data
+  const animationData: VgData = {
+    name: `${dataSource}_curr`,
+    source: dataSource
+  };
+  addIdentifierTransform(animationData);
+
+  let expr = '';
+  for (const channel in model.encoding) {
+    if (channel === TIME) {
+      continue;
+    }
+    if (expr) {
+      expr += ' && ';
+    }
+    expr += `isValid(datum["${channel}"]) && isFinite(+datum["${channel}"])`;
+  }
+
+  // add a filter transform to the animation data
+  const filterTransform: FilterTransform = {
+    type: 'filter',
+    expr
+  };
+  animationData.transform.push(filterTransform);
+  dataCopy.push(animationData);
+
+  return dataCopy;
+}
+
+function addIdentifierTransform(data: VgData) {
+  const formula: IdentifierTransform = {
+    type: 'identifier',
+    as: '_vgsid_'
+  };
+  if (!data.transform) {
+    data.transform = [];
+  }
+  data.transform.push(formula);
 }

@@ -18,9 +18,10 @@ import {
 } from '../spec/toplevel';
 import {Dict, keys} from '../util';
 import {buildModel} from './buildmodel';
-import {assembleRootData} from './data/assemble';
+import {assembleRootData, assembleTimeEncodingData} from './data/assemble';
 import {optimizeDataflow} from './data/optimize';
 import {Model} from './model';
+import {UnitModel} from './unit';
 
 export interface CompileOptions {
   /**
@@ -205,11 +206,15 @@ function assembleTopLevelModel(
   // Config with Vega-Lite only config removed.
   const vgConfig = model.config ? stripAndRedirectConfig(model.config) : undefined;
 
-  const data = [].concat(
+  let data = [].concat(
     model.assembleSelectionData([]),
     // only assemble data in the root
     assembleRootData(model.component.data, datasets)
   );
+
+  if (model instanceof UnitModel) {
+    data = assembleTimeEncodingData(model as UnitModel, data);
+  }
 
   const projections = model.assembleProjections();
   const title = model.assembleTitle();

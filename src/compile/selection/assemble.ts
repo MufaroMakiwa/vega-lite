@@ -114,7 +114,6 @@ export function assembleTopLevelSignals(model: UnitModel, signals: Signal[]) {
 }
 
 export function assembleUnitSelectionData(model: UnitModel, data: readonly VgData[]): VgData[] {
-  debugger;
   const dataCopy = [...data];
   const unit = unitName(model, {escape: false});
 
@@ -141,7 +140,7 @@ export function assembleUnitSelectionData(model: UnitModel, data: readonly VgDat
       dataCopy.push(store);
     }
   }
-
+  debugger;
   return dataCopy;
 }
 

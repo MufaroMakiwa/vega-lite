@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {
   isObject,
   RangeEnum,
@@ -861,6 +862,7 @@ export function scaleTypeSupportDataType(specifiedType: ScaleType, fieldDefType:
 }
 
 export function channelSupportScaleType(channel: Channel, scaleType: ScaleType, hasNestedOffsetScale = false): boolean {
+  // debugger;
   if (!CHANNEL.isScaleChannel(channel)) {
     return false;
   }
@@ -871,6 +873,7 @@ export function channelSupportScaleType(channel: Channel, scaleType: ScaleType, 
     case CHANNEL.YOFFSET:
     case CHANNEL.THETA:
     case CHANNEL.RADIUS:
+    // case CHANNEL.TIME:
       if (isContinuousToContinuous(scaleType)) {
         return true;
       } else if (scaleType === 'band') {

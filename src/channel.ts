@@ -386,6 +386,7 @@ const {
   theta2: _theta2,
   radius: _radius,
   radius2: _radius2,
+  time: _time,
   // The rest of unit channels then have scale
   ...NONPOSITION_CHANNEL_INDEX
 } = UNIT_CHANNEL_INDEX;
@@ -396,6 +397,7 @@ export type NonPositionChannel = typeof NONPOSITION_CHANNELS[number];
 const POSITION_SCALE_CHANNEL_INDEX = {
   x: 1,
   y: 1
+  // time: 1
 } as const;
 export const POSITION_SCALE_CHANNELS = keys(POSITION_SCALE_CHANNEL_INDEX);
 export type PositionScaleChannel = keyof typeof POSITION_SCALE_CHANNEL_INDEX;

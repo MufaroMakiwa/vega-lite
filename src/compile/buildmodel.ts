@@ -16,7 +16,7 @@ export function buildModel(
   unitSize: LayoutSizeMixins,
   config: Config<SignalRef>
 ): Model {
-  debugger;
+  // debugger;
   if (isFacetSpec(spec)) {
     return new FacetModel(spec, parent, parentGivenName, config);
   } else if (isLayerSpec(spec)) {

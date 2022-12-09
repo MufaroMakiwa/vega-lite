@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {
   getMainRangeChannel,
   getSecondaryRangeChannel,
@@ -21,6 +22,7 @@ import * as ref from './valueref';
  * Return encode for point (non-band) position channels.
  */
 export function pointPosition(
+  // channel: 'x' | 'y' | 'theta' | 'radius' | 'time',
   channel: 'x' | 'y' | 'theta' | 'radius',
   model: UnitModel,
   {
@@ -132,6 +134,7 @@ export function pointPositionDefaultRef({
 }): () => VgValueRef {
   const {markDef, config} = model;
   return () => {
+    // debugger;
     const mainChannel = getMainRangeChannel(channel);
     const vgChannel = getVgPositionChannel(channel);
 

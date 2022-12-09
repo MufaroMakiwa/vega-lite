@@ -531,7 +531,7 @@ export function initEncoding(
   filled: boolean,
   config: Config
 ): Encoding<string> {
-  debugger;
+  // debugger;
   const normalizedEncoding: Encoding<string> = {};
   for (const key of keys(encoding)) {
     if (!isChannel(key)) {

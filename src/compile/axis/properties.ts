@@ -221,6 +221,7 @@ export function defaultLabelBaseline(
 export function defaultLabelAlign(
   angle: number | SignalRef,
   orient: AxisOrient | SignalRef,
+  // channel: 'x' | 'y' | 'time'
   channel: 'x' | 'y'
 ): Align | SignalRef {
   if (angle === undefined) {

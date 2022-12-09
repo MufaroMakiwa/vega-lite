@@ -47,7 +47,8 @@ import {
   XOFFSET,
   Y,
   Y2,
-  YOFFSET
+  YOFFSET,
+  TIME
 } from './channel';
 import {getMarkConfig, getMarkPropOrConfig} from './compile/common';
 import {isCustomFormatType} from './compile/format';
@@ -1271,6 +1272,7 @@ export function channelCompatibility(
     case THETA:
     case RADIUS:
     case DESCRIPTION:
+    case TIME:
       return COMPATIBLE;
 
     case LONGITUDE:
