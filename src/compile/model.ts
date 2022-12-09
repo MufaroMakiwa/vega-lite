@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {
   AnchorValue,
   Axis as VgAxis,
@@ -248,6 +249,7 @@ export abstract class Model {
   }
 
   public parse() {
+    debugger;
     this.parseScale();
 
     this.parseLayoutSize(); // depends on scale
@@ -370,6 +372,7 @@ export abstract class Model {
   public abstract assembleLayoutSignals(): NewSignal[];
 
   public assembleHeaderMarks(): VgMarkGroup[] {
+    // debugger;
     const {layoutHeaders} = this.component;
     let headerMarks = [];
 
@@ -431,6 +434,7 @@ export abstract class Model {
    * Assemble the mark group for this model. We accept optional `signals` so that we can include concat top-level signals with the top-level model's local signals.
    */
   public assembleGroup(signals: Signal[] = []) {
+    debugger;
     const group: VgMarkGroup = {};
 
     signals = signals.concat(this.assembleSignals());
@@ -463,6 +467,7 @@ export abstract class Model {
       group.legends = legends;
     }
 
+    debugger;
     return group;
   }
 
@@ -603,6 +608,7 @@ export abstract class Model {
    */
   public correctDataNames = (mark: VgMarkGroup) => {
     // TODO: make this correct
+    // will need to probably update this to get the correct data name
 
     // for normal data references
     if (mark.from?.data) {

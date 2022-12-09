@@ -33,7 +33,6 @@ import {StackNode} from './stack';
 import {TimeUnitNode} from './timeunit';
 import {WindowTransformNode} from './window';
 import {IdentifierTransform, FilterTransform} from 'vega';
-import {TIME} from '../../channel';
 
 function makeWalkTree(data: VgData[]) {
   // to name datasources
@@ -219,7 +218,7 @@ export function assembleFacetData(root: FacetNode): VgData[] {
  * @return modified data array
  */
 export function assembleRootData(dataComponent: DataComponent, datasets: Dict<InlineDataset>): VgData[] {
-  debugger;
+  // debugger;
   const data: VgData[] = [];
 
   // dataComponent.sources.forEach(debug);
@@ -270,7 +269,7 @@ export function assembleRootData(dataComponent: DataComponent, datasets: Dict<In
       d.values = datasets[d.name];
     }
   }
-  debugger;
+  // debugger;
   return data;
 }
 
@@ -297,21 +296,10 @@ export function assembleTimeEncodingData(model: UnitModel, data: readonly VgData
   };
   addIdentifierTransform(animationData);
 
-  let expr = '';
-  for (const channel in model.encoding) {
-    if (channel === TIME) {
-      continue;
-    }
-    if (expr) {
-      expr += ' && ';
-    }
-    expr += `isValid(datum["${channel}"]) && isFinite(+datum["${channel}"])`;
-  }
-
   // add a filter transform to the animation data
   const filterTransform: FilterTransform = {
     type: 'filter',
-    expr
+    expr: '!length(data("current_frame_0_store")) || vlSelectionTest("current_frame_0_store", datum)'
   };
   animationData.transform.push(filterTransform);
   dataCopy.push(animationData);

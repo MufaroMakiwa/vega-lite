@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {Legend as VgLegend, NewSignal, SignalRef, Title as VgTitle} from 'vega';
 import {array} from 'vega-util';
 import {Config} from '../config';
@@ -132,6 +133,7 @@ export class LayerModel extends Model {
   }
 
   public assembleMarks(): any[] {
+    // debugger;
     return assembleLayerSelectionMarks(
       this,
       this.children.flatMap(child => {

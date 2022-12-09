@@ -140,7 +140,7 @@ export function assembleUnitSelectionData(model: UnitModel, data: readonly VgDat
       dataCopy.push(store);
     }
   }
-  debugger;
+  // debugger;
   return dataCopy;
 }
 

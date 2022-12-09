@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {NewSignal, SignalRef} from 'vega';
 import {Config} from '../config';
 import * as log from '../log';
@@ -100,6 +101,7 @@ export class ConcatModel extends Model {
   }
 
   public assembleMarks(): any[] {
+    // debugger;
     // only children have marks
     return this.children.map(child => {
       const title = child.assembleTitle();

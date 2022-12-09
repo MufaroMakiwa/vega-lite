@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {NewSignal, SignalRef} from 'vega';
 import {isArray} from 'vega-util';
 import {Axis, AxisInternal, isConditionalAxisValue} from '../axis';
@@ -37,7 +38,7 @@ import {LayoutSizeMixins, NormalizedUnitSpec} from '../spec';
 import {isFrameMixins} from '../spec/base';
 import {stack, StackProperties} from '../stack';
 import {keys} from '../util';
-import {VgData, VgLayout} from '../vega.schema';
+import {VgData, VgLayout, VgMarkGroup} from '../vega.schema';
 import {assembleAxisSignals} from './axis/assemble';
 import {AxisInternalIndex} from './axis/component';
 import {parseUnitAxes} from './axis/parse';
@@ -246,7 +247,75 @@ export class UnitModel extends ModelWithField {
   }
 
   public assembleSignals(): NewSignal[] {
-    return [...assembleAxisSignals(this), ...assembleUnitSelectionSignals(this, [])];
+    const signals = [...assembleAxisSignals(this), ...assembleUnitSelectionSignals(this, [])];
+    if (!this.encoding.time) {
+      return signals;
+    }
+    signals.push({
+      name: 'unit',
+      value: {},
+      on: [{events: 'mousemove', update: 'isTuple(group()) ? group() : unit'}]
+    });
+    signals.push({
+      name: 'current_frame_0',
+      update: 'vlSelectionResolve("current_frame_0_store", "union", true, true)'
+    });
+
+    signals.push({
+      name: 'current_frame_0_modify',
+      on: [
+        {
+          events: {signal: 'current_frame_0_tuple'},
+          update:
+            'modify("current_frame_0_store", current_frame_0_toggle ? null : current_frame_0_tuple, current_frame_0_toggle ? null : true, current_frame_0_toggle ? current_frame_0_tuple : null)'
+        }
+      ]
+    });
+    signals.push({
+      name: 'anim_clock',
+      init: '0',
+      on: [
+        {
+          events: {type: 'timer', throttle: 16.666666666666668},
+          update:
+            'true ? (anim_clock + (now() - last_tick_at) > max_range_extent ? 0 : anim_clock + (now() - last_tick_at)) : anim_clock'
+        }
+      ]
+    });
+    signals.push({
+      name: 'last_tick_at',
+      init: 'now()',
+      on: [{events: [{signal: 'anim_clock'}], update: 'now()'}]
+    });
+
+    // signals.push({
+    //   name: 'eased_anim_clock',
+    //   update: 'easeLinear(anim_clock / max_range_extent) * max_range_extent'
+    // });
+
+    signals.push({name: 'date_domain', init: "domain('time_date')"});
+    signals.push({name: 't_index', update: 'indexof(date_domain, anim_value)'});
+    signals.push({name: 'max_range_extent', init: "extent(range('time_date'))[1]"});
+    signals.push({name: 'min_extent', init: 'extent(date_domain)[0]'});
+    signals.push({name: 'max_extent', init: 'extent(date_domain)[1]'});
+    signals.push({name: 'anim_value', update: "invert('time_date', eased_anim_clock)"});
+    signals.push({name: 'current_frame_0_toggle', value: false});
+    signals.push({
+      name: 'current_frame_0_tuple_fields',
+      value: [{type: 'E', field: 'date'}]
+    });
+    signals.push({
+      name: 'current_frame_0_tuple',
+      on: [
+        {
+          events: [{signal: 'eased_anim_clock'}, {signal: 'anim_value'}],
+          update: '{unit: "", fields: current_frame_0_tuple_fields, values: [anim_value ? anim_value : min_extent]}',
+          force: true
+        }
+      ]
+    });
+
+    return signals;
   }
 
   public assembleSelectionData(data: readonly VgData[]): VgData[] {
@@ -262,6 +331,7 @@ export class UnitModel extends ModelWithField {
   }
 
   public assembleMarks() {
+    debugger;
     let marks = this.component.mark ?? [];
 
     // If this unit is part of a layer, selections should augment
@@ -271,7 +341,16 @@ export class UnitModel extends ModelWithField {
       marks = assembleUnitSelectionMarks(this, marks);
     }
 
-    return marks.map(this.correctDataNames);
+    const marksWithCorrectedDataNames = marks.map(this.correctDataNames);
+    if (this.encoding.time) {
+      marksWithCorrectedDataNames.forEach((mark: VgMarkGroup) => {
+        if (mark.from?.data) {
+          mark.from.data = 'source_0_curr';
+        }
+        mark.interactive = true;
+      });
+    }
+    return marksWithCorrectedDataNames;
   }
   public assembleGroupStyle(): string | string[] {
     const {style} = this.view || {};

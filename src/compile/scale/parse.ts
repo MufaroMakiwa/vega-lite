@@ -1,4 +1,5 @@
-import {getMainChannelFromOffsetChannel, isXorYOffset, ScaleChannel, SCALE_CHANNELS, SHAPE} from '../../channel';
+/* eslint-disable no-debugger */
+import {getMainChannelFromOffsetChannel, isXorYOffset, ScaleChannel, SCALE_CHANNELS, SHAPE, TIME} from '../../channel';
 import {getFieldOrDatumDef, ScaleDatumDef, TypedFieldDef} from '../../channeldef';
 import {channelHasNestedOffsetScale} from '../../encoding';
 import * as log from '../../log';
@@ -22,15 +23,19 @@ import {parseScaleProperty, parseScaleRange} from './properties';
 import {scaleType} from './type';
 
 export function parseScales(model: Model, {ignoreRange}: {ignoreRange?: boolean} = {}) {
+  // debugger;
   parseScaleCore(model);
+  // debugger;
   parseScaleDomain(model);
   for (const prop of NON_TYPE_DOMAIN_RANGE_VEGA_SCALE_PROPERTIES) {
     parseScaleProperty(model, prop);
   }
+  // debugger;
   if (!ignoreRange) {
     // range depends on zero
     parseScaleRange(model);
   }
+  // debugger;
 }
 
 export function parseScaleCore(model: Model) {
@@ -45,6 +50,7 @@ export function parseScaleCore(model: Model) {
  * Parse scales for all channels of a model.
  */
 function parseUnitScaleCore(model: UnitModel): ScaleComponentIndex {
+  // debugger;
   const {encoding, mark, markDef} = model;
   const scaleComponents: ScaleComponentIndex = {};
   for (const channel of SCALE_CHANNELS) {
@@ -72,12 +78,17 @@ function parseUnitScaleCore(model: UnitModel): ScaleComponentIndex {
       const hasNestedOffsetScale = channelHasNestedOffsetScale(encoding, channel);
 
       const sType = scaleType(specifiedScale, channel, fieldOrDatumDef, markDef, hasNestedOffsetScale);
-      scaleComponents[channel] = new ScaleComponent(model.scaleName(`${channel}`, true), {
+      let scaleName = model.scaleName(`${channel}`, true);
+      if (channel === TIME) {
+        scaleName = `${scaleName}_${encoding.time.field}`;
+      }
+      scaleComponents[channel] = new ScaleComponent(scaleName, {
         value: sType,
         explicit: specifiedScale.type === sType
       });
     }
   }
+  // debugger;
   return scaleComponents;
 }
 

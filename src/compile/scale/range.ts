@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {RangeScheme, SignalRef} from 'vega';
 import {isArray, isNumber, isObject} from 'vega-util';
 import {isBinning} from '../../bin';
@@ -22,6 +23,7 @@ import {
   STROKEOPACITY,
   STROKEWIDTH,
   THETA,
+  TIME,
   X,
   XOFFSET,
   Y,
@@ -106,6 +108,7 @@ function getBinStepSignal(model: UnitModel, channel: 'x' | 'y'): SignalRefWrappe
  * Return mixins that includes one of the Vega range types (explicit range, range.step, range.scheme).
  */
 export function parseRangeForChannel(channel: ScaleChannel, model: UnitModel): Explicit<VgRange> {
+  // debugger;
   const specifiedScale = model.specifiedScales[channel];
   const {size} = model;
 
@@ -127,6 +130,9 @@ export function parseRangeForChannel(channel: ScaleChannel, model: UnitModel): E
         switch (property) {
           case 'range': {
             const range = specifiedScale.range;
+            if (channel === TIME) {
+              return makeImplicit(range) as Explicit<VgRange>;
+            }
             if (isArray(range)) {
               if (isXorY(channel)) {
                 return makeExplicit(

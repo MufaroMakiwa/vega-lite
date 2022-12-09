@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {SignalRef, TimeInterval} from 'vega';
 import {isArray} from 'vega-util';
 import {isBinned, isBinning, isBinParams} from '../../bin';
@@ -10,7 +11,8 @@ import {
   POLAR_POSITION_SCALE_CHANNELS,
   POSITION_SCALE_CHANNELS,
   ScaleChannel,
-  STROKE
+  STROKE,
+  TIME
 } from '../../channel';
 import {
   getFieldDef,
@@ -107,6 +109,10 @@ function parseUnitScaleProperty(model: UnitModel, property: Exclude<keyof (Scale
             );
         }
       } else {
+        if (channel == TIME && property === 'align') {
+          localScaleCmpt.set(property, 0, false);
+          continue;
+        }
         const value =
           property in scaleRules
             ? scaleRules[property]({

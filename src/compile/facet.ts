@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {AggregateOp, LayoutAlign, NewSignal, SignalRef} from 'vega';
 import {isArray} from 'vega-util';
 import {isBinning} from '../bin';
@@ -394,6 +395,7 @@ export class FacetModel extends ModelWithField {
   }
 
   public assembleMarks(): VgMarkGroup[] {
+    // debugger;
     const {child} = this;
 
     // If we facet by two dimensions, we need to add a cross operator to the aggregation

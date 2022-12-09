@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import {isBinning} from '../../bin';
 import {
   getSizeChannel,
@@ -6,7 +7,8 @@ import {
   isXorY,
   isXorYOffset,
   rangeType,
-  ScaleChannel
+  ScaleChannel,
+  TIME
 } from '../../channel';
 import {DatumDef, isFieldDef, isPositionFieldOrDatumDef, ScaleDatumDef, TypedFieldDef} from '../../channeldef';
 import * as log from '../../log';
@@ -30,6 +32,7 @@ export function scaleType(
   mark: MarkDef,
   hasNestedOffsetScale = false
 ): ScaleType {
+  // debugger;
   const defaultScaleType = defaultType(channel, fieldDef, mark, hasNestedOffsetScale);
   const {type} = specifiedScale;
 
@@ -66,6 +69,7 @@ function defaultType(
   mark: MarkDef,
   hasNestedOffsetScale: boolean
 ): ScaleType {
+  // debugger;
   switch (fieldDef.type) {
     case 'nominal':
     case 'ordinal': {
@@ -96,6 +100,10 @@ function defaultType(
       }
 
       if (isPositionFieldOrDatumDef(fieldDef) && fieldDef.axis?.tickBand) {
+        return 'band';
+      }
+
+      if (channel === TIME) {
         return 'band';
       }
       // Otherwise, use ordinal point scale so we can easily get center positions of the marks.
